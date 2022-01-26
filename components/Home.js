@@ -73,11 +73,12 @@ class Home{
 
             this.listaStud.forEach(s => {
                 rows += `
-                <tr class="row">
+                <tr>
                 <th scope="row">${++cnt}</th>
                 <td>${s.name}</td>
                 <td>${s.address}</td>
                 <td>${s.email}</td>
+                <td id="rid">${s.id}</td>
             </tr>
             `;         
             });
@@ -93,11 +94,13 @@ class Home{
         let tab = document.querySelector("table");
         let tabcont = `
         <thead>
-        <tr>
+        <tr class="brow">
             <th scope="col">Nr crt</th>
             <th scope="col">Name</th>
             <th scope="col">Address</th>
             <th scope="col">Email</th>
+            <th scope="col">Id</th>
+            
         </tr>
         </thead>
         `;
@@ -109,7 +112,8 @@ class Home{
             <th scope="row">${++cnt}</th>
             <td>${s.name}</td>
             <td>${s.address}</td>
-            <td>${s.email}</td>
+            <td>${s.id}</td>
+            <td class="cid">${s.id}</td>
         </tr>
         `;         
         });
@@ -138,10 +142,12 @@ class Home{
         }
         
     }
-    mainClick =async (e) => {
+
+    mainClick = async (e) => {
         let elem = e.target;
         let eId = elem.id;
-        
+        let pn = elem.parentNode.parentNode;
+        console.log(pn.tagName);
         switch (true) {
             case eId == "btnadd":
                 console.log("am apasat add");
@@ -153,8 +159,9 @@ class Home{
                 let lista = await this.api.filterName(vf.value);
                 this.mkTableFromList(lista);
                 break;
-            case elem.className=="row":
-                console.log("Ati apasat pe un rand");
+            case pn.tagName == "TBODY":
+                let elemId = elem.parentNode.lastElementChild.textContent;
+                
                 break;
         }
 
