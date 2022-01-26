@@ -1,5 +1,6 @@
 import { Api } from "../api.js";
 import { NewStudent } from "./NewStudent.js";
+import { Update } from "./Update.js";
 
 
 class Home{
@@ -8,7 +9,10 @@ class Home{
         this.main = document.querySelector("main");
         this.listaStud = [];
         this.api = new Api();
-        
+        this.lastid = 0;
+        this.name = "";
+        this.address = "";
+        this.email = "";
         this.initMain();
         this.main.addEventListener("click", (e) => {
             this.mainClick(e);
@@ -99,8 +103,7 @@ class Home{
             <th scope="col">Name</th>
             <th scope="col">Address</th>
             <th scope="col">Email</th>
-            <th scope="col">Id</th>
-            
+                      
         </tr>
         </thead>
         `;
@@ -112,8 +115,8 @@ class Home{
             <th scope="row">${++cnt}</th>
             <td>${s.name}</td>
             <td>${s.address}</td>
-            <td>${s.id}</td>
-            <td class="cid">${s.id}</td>
+            <td>${s.email}</td>
+            <td id="rid">${s.id}</td>
         </tr>
         `;         
         });
@@ -143,6 +146,16 @@ class Home{
         
     }
 
+    
+    delSt = async () => {
+        try {
+            let resp = this.api.deleteStudent(this.lastid);
+            return response.json();
+        } catch (e) {
+            throw new Error(e);
+        }    
+    }
+
     mainClick = async (e) => {
         let elem = e.target;
         let eId = elem.id;
@@ -159,10 +172,30 @@ class Home{
                 let lista = await this.api.filterName(vf.value);
                 this.mkTableFromList(lista);
                 break;
-            case pn.tagName == "TBODY":
-                let elemId = elem.parentNode.lastElementChild.textContent;
-                
+            case eId == "btnupd":
+                let id = this.lastid;
+                let name = this.name;
+                let address = this.address;
+                let email = this.email;
+                let up = new Update({ id, name, address, email });
+               
                 break;
+
+            case eId == "btndel":
+                let r = this.delSt();
+                this.initMain();
+                break;
+            
+            case pn.tagName == "TBODY":
+                let chld = elem.parentNode.children;
+                this.lastid = chld[4].textContent;
+               // this.lastid = id;
+                this.name =chld[1].textContent;
+                this.address = chld[2].textContent;
+                this.email = chld[3].textContent;
+                //let up = new Update({ id, name, address, email });
+                break;
+        
         }
 
 

@@ -36,6 +36,26 @@ class Api{
         }
     }
 
+    updateStudent = async (student) => {
+        try {
+            let response = await this.api("http://localhost:8080/api/v1/school/"+student.id, "PUT", student);
+            return response.json();            
+        } catch (e) {
+            throw new Error(e);
+        }
+
+    }
+    
+    deleteStudent = async (id) => {
+        try {
+            let response = await this.api("http://localhost:8080/api/v1/school/"+id, "DELETE");
+            return response.json();            
+        } catch (e) {
+            throw new Error(e);
+        }
+
+    }
+
     filterName = async (fname) => {
         try {
             console.log("http://localhost:8080/api/v1/school/place/" + fname);
