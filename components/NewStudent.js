@@ -91,7 +91,8 @@ class NewStudent{
             student.name = name;
             student.address = address;
             student.email = email;
-            let response = await this.api.addStudent(student);
+            let response=await this.api.addStudent(student);
+            let h = new Home();
             return response.json();
 
         } catch (e) {
@@ -112,7 +113,6 @@ class NewStudent{
                 console.log(this.errvect)
                 if (this.errvect.includes(1)) {
                     let erd = this.mkDivErr();
-                    
 
                     this.main.appendChild(erd);
                     setTimeout(() => {
@@ -128,9 +128,10 @@ class NewStudent{
                       }, 3001);
  
                 } else {
-                    this.addS();
-                    let h = new Home();
-
+                    let r = this.addS();
+                    
+         
+                    
                 }
                 break;
             case clk.id == "btn_ns_cancel":

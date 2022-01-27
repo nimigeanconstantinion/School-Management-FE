@@ -14,8 +14,17 @@ class Home{
         this.address = "";
         this.email = "";
         this.initMain();
-        this.main.addEventListener("click", (e) => {
-            this.mainClick(e);
+        this.lastcell = "";
+        this.main.addEventListener("click", this.mainClick);
+
+        
+        this.cells = document.getElementsByClassName(".cell");
+      
+
+        this.main.addEventListener("focusout", (e) => {
+          
+
+            this.cellUpd(e);
         })
         
     }
@@ -34,7 +43,7 @@ class Home{
             <div id="navi">
                 <img src="/image/filter-svgrepo-com.svg" id="btnfilt" alt="">
                 <img src="/image/add-svgrepo-com.svg" id="btnadd" alt="">
-                <img src="/image/update-arrow-svgrepo-com.svg" id="btnupd" alt="">
+                
                 <img src="/image/delete-svgrepo-com.svg" id="btndel" alt="">
 
             </div>
@@ -77,13 +86,13 @@ class Home{
 
             this.listaStud.forEach(s => {
                 rows += `
-                <tr>
-                <th scope="row">${++cnt}</th>
-                <td>${s.name}</td>
-                <td>${s.address}</td>
-                <td>${s.email}</td>
-                <td id="rid">${s.id}</td>
-            </tr>
+                <tr  id="row"}">
+                    <th scope="row">${++cnt}</th>
+                    <td id="row" class="cell">${s.name}</td>
+                    <td id="row" class="cell">${s.address}</td>
+                    <td id="row" class="cell">${s.email}</td>
+                    <td id="rid">${s.id}</td>
+                </tr>
             `;         
             });
             return rows;    
@@ -125,6 +134,16 @@ class Home{
         tab.innerHTML = tabcont;
     }
 
+    getRowContent = (e) => {
+            let elem = e.target;
+        
+            let rowNode = elem.parentNode;
+        
+            let chld = rowNode.children;
+            this.lastid = chld[4].textContent;
+       
+    }
+
     newStudent = async (name, address, email) => {
         console.log("in newStudent");
         try {
@@ -146,10 +165,40 @@ class Home{
         
     }
 
-    
+    cellUpd = (e) => {
+        let elem = e.target;
+
+        if (elem.className == "cell") {
+            let rowNode = elem.parentNode;
+            let chld = rowNode.children;
+            this.name = chld[1].textContent;
+            this.address = chld[2].textContent;
+            this.email = chld[3].textContent;
+            this.lastid=chld[4].textContent
+            this.updS();                
+        }
+    }
+
+    updS = async () => {
+        let id = this.lastid;
+        let name = this.name;
+        let address = this.address;
+        let email = this.email;
+        try {
+            let r = await this.api.updateStudent({ id, name, address, email });
+            return r.json();
+        } catch(e) {
+            throw new Error(e);
+        }
+
+    }
+
+
+
     delSt = async () => {
         try {
-            let resp = this.api.deleteStudent(this.lastid);
+            let resp = await this.api.deleteStudent(this.lastid);
+            this.initMain();
             return response.json();
         } catch (e) {
             throw new Error(e);
@@ -160,7 +209,7 @@ class Home{
         let elem = e.target;
         let eId = elem.id;
         let pn = elem.parentNode.parentNode;
-        console.log(pn.tagName);
+        console.log(elem.id);
         switch (true) {
             case eId == "btnadd":
                 console.log("am apasat add");
@@ -172,34 +221,35 @@ class Home{
                 let lista = await this.api.filterName(vf.value);
                 this.mkTableFromList(lista);
                 break;
-            case eId == "btnupd":
-                let id = this.lastid;
-                let name = this.name;
-                let address = this.address;
-                let email = this.email;
-                let up = new Update({ id, name, address, email });
-               
-                break;
-
+            
             case eId == "btndel":
-                let r = this.delSt();
-                this.initMain();
+                
+               
+                try {
+                    let r = await this.delSt();
+                } catch (e) {
+                    throw new Error(e);
+                }
+                
                 break;
             
-            case pn.tagName == "TBODY":
-                let chld = elem.parentNode.children;
-                this.lastid = chld[4].textContent;
-               // this.lastid = id;
-                this.name =chld[1].textContent;
-                this.address = chld[2].textContent;
-                this.email = chld[3].textContent;
-                //let up = new Update({ id, name, address, email });
+            case eId == "row":
+                
+                console.log("aici");
+                this.getRowContent(e);
+                let elemVal = elem.textContent;
+                elem.contentEditable = true;
                 break;
+        
         
         }
 
 
     }
+
+
+
+
 }
 
 export { Home };
