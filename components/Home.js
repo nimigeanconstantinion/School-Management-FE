@@ -218,19 +218,14 @@ class Home{
             case eId == "btnfilt":
                 console.log("am apasat pe filtrare");
                 let vf = document.querySelector("#selname");
-                let lista = await this.api.filterName(vf.value);
+                let lista =await this.api.filterName(vf.value);
                 this.mkTableFromList(lista);
                 break;
             
             case eId == "btndel":
                 
-               
-                try {
-                    let r = await this.delSt();
-                } catch (e) {
-                    throw new Error(e);
-                }
-                
+               let r = await this.delSt();
+               this.initMain(); 
                 break;
             
             case eId == "row":
