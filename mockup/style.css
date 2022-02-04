@@ -62,7 +62,7 @@ img{
     border-radius: 5px;
 }
 
-#btnfilt,#btnadd,#btnupd,#btndel{
+#btnfilt,#btnadd,#btnupd,#btndel,#btn_log_login,#btn_log_cancel{
     align-self: baseline;
     margin-left: 5px;
     width: 40px;

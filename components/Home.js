@@ -6,6 +6,14 @@ import { Update } from "./Update.js";
 class Home{
 
     constructor(){
+       
+        
+        this.init();
+    }
+
+
+    init = ()=>{
+
         this.main = document.querySelector("main");
         this.listaStud = [];
         this.api = new Api();
@@ -27,6 +35,7 @@ class Home{
             this.cellUpd(e);
         })
         
+
     }
 
     initMain=()=>{
@@ -186,7 +195,7 @@ class Home{
         let email = this.email;
         try {
             let r = await this.api.updateStudent({ id, name, address, email });
-            return r.json();
+            return r;
         } catch(e) {
             throw new Error(e);
         }
@@ -196,10 +205,12 @@ class Home{
 
 
     delSt = async () => {
+        
         try {
-            let resp = await this.api.deleteStudent(this.lastid);
-            this.initMain();
+            let response=await this.api.deleteStudent(this.lastid);
+            this.init();
             return response.json();
+            
         } catch (e) {
             throw new Error(e);
         }    
@@ -213,7 +224,7 @@ class Home{
         switch (true) {
             case eId == "btnadd":
                 console.log("am apasat add");
-                let ns = new NewStudent();
+                let ns = new NewStudent(this);
                 break;
             case eId == "btnfilt":
                 console.log("am apasat pe filtrare");
@@ -223,10 +234,9 @@ class Home{
                 break;
             
             case eId == "btndel":
+                this.delSt();
                 
-               let r = await this.delSt();
-               this.initMain(); 
-                break;
+               break;
             
             case eId == "row":
                 
@@ -247,4 +257,4 @@ class Home{
 
 }
 
-export { Home };
+export { Home};

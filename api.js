@@ -28,7 +28,7 @@ class Api{
     }
     addStudent = async (student) => {
         try {
-            console.log()
+                
             let response = await this.api("http://localhost:8080/api/v1/school", "POST", student);
             return response.json();
         } catch (e) {
@@ -39,7 +39,7 @@ class Api{
     updateStudent = async (student) => {
         try {
             let response = await this.api("http://localhost:8080/api/v1/school/"+student.id, "PUT", student);
-            return response.json();            
+                   
         } catch (e) {
             throw new Error(e);
         }
@@ -49,7 +49,7 @@ class Api{
     deleteStudent = async (id) => {
         try {
             let response = await this.api("http://localhost:8080/api/v1/school/"+id, "DELETE");
-            return response.json();            
+                      
         } catch (e) {
             throw new Error(e);
         }
